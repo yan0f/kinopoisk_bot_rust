@@ -18,19 +18,12 @@ pub struct Movie {
     ru_name: Option<String>,
     #[serde(rename = "nameEn")]
     en_name: Option<String>,
-    #[serde(rename = "type")]
-    film_type: String,
     year: String,
     pub(crate) description: Option<String>,
     #[serde(rename = "filmLength")]
     duration: Option<String>,
     countries: Vec<Country>,
-    genres: Vec<Genre>,
     kp_rate: Option<String>,
-    #[serde(rename = "ratingVoteCount")]
-    rating_vote_count: u64,
-    #[serde(rename = "posterUrl")]
-    poster_url: String,
     #[serde(rename = "posterUrlPreview")]
     pub(crate) poster_preview_url: String,
 }
@@ -39,12 +32,6 @@ pub struct Movie {
 pub struct Country {
     country: String,
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Genre {
-    genre: String,
-}
-
 impl Movie {
     pub(crate) fn get_kp_url(&self) -> String {
         format!("https://www.kinopoisk.ru/film/{}/", self.kp_id)
