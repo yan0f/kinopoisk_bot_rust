@@ -24,7 +24,7 @@ async fn main() {
                     InlineQueryResult::Article(
                         InlineQueryResultArticle::new(
                             Uuid::new_v4().to_string(),
-                            movie.get_name(),
+                            movie.get_title(),
                             InputMessageContent::Text(InputMessageContentText::new(
                                 movie.get_kp_url(),
                             )),

@@ -19,13 +19,13 @@ pub struct Movie {
     #[serde(rename = "nameEn")]
     en_name: Option<String>,
     year: String,
-    pub(crate) description: Option<String>,
+    pub description: Option<String>,
     #[serde(rename = "filmLength")]
     duration: Option<String>,
     countries: Vec<Country>,
     kp_rate: Option<String>,
     #[serde(rename = "posterUrlPreview")]
-    pub(crate) poster_preview_url: String,
+    pub poster_preview_url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -33,35 +33,37 @@ pub struct Country {
     country: String,
 }
 impl Movie {
-    pub(crate) fn get_kp_url(&self) -> String {
+    pub fn get_kp_url(&self) -> String {
         format!("https://www.kinopoisk.ru/film/{}/", self.kp_id)
     }
 
-    pub(crate) fn get_name(&self) -> String {
-        self.en_name
-            .clone()
-            .unwrap_or(self.ru_name.clone().unwrap_or_default())
+    pub fn get_name(&self) -> String {
+        self.en_name.clone().unwrap_or(self.ru_name.clone().unwrap_or_default())
     }
-    pub(crate) fn get_title(&self) -> String {
-        todo!();
-    }
-    // def get_result_article_title(movie: Movie) -> str:
-    //     title = ''
-    //     if movie.ru_name:
-    //         title += f'«{movie.ru_name}» ({movie.name}, {movie.year})'
-    //     else:
-    //         title += f'{movie.name}'
-    //         if movie.year:
-    //             title += f', {movie.year}'
-    //     if movie.kp_rate:
-    //         title += f' • {movie.kp_rate}'
-    //     return title
-    pub(crate) fn get_year(&self) -> Option<String> {
-        if self.year != "null" {
-            self.year.split("-").nth(0);
+
+    pub fn get_title(&self) -> String {
+        let mut title = String::from("");
+        match &self.ru_name {
+            Some(ru_name) => title.push_str(format!("«{0}» ({1}, {2})", ru_name, self.get_name(), self.year).as_str()),
+            None => {
+                title.push_str(format!("{}, {}", self.get_name(), self.year).as_str());
+                // if self.year {
+                //     title.push_str(", {}", movie.year)
+                // }
+            }
         }
-        None
+        if let Some(kp_rate) = &self.kp_rate {
+            title.push_str(format!(" • {kp_rate}").as_str())
+        }
+        title
     }
+
+    // fn get_year(&self) -> Option<String> {
+    //     if self.year != "null" {
+    //         self.year.split("-").nth(0);
+    //     }
+    //     None
+    // }
 }
 
 pub async fn search_for_movie(keyword: String) -> Vec<Movie> {
@@ -78,10 +80,5 @@ pub async fn search_for_movie(keyword: String) -> Vec<Movie> {
         .await
         .unwrap();
     let res: Res = response.json().await.unwrap();
-    // if !response.status().is_success() {
-    //     panic!("")
-    // }
     res.films
-    //    if request.status_code != 200:
-    //         raise Exception(request_json['error'])
 }
