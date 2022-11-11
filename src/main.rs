@@ -1,3 +1,4 @@
+use log::{error, info};
 use teloxide::{
     prelude::*,
     types::{
@@ -11,7 +12,7 @@ mod handlers;
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
-    println!("Starting Kinopoisk bot...");
+    info!("Starting Kinopoisk bot...");
 
     let bot = Bot::from_env();
     let handler = Update::filter_inline_query().branch(dptree::endpoint(
@@ -36,7 +37,7 @@ async fn main() {
                 .collect();
             let response = bot.answer_inline_query(&q.id, results).send().await;
             if let Err(err) = response {
-                log::error!("Error in handler: {:?}", err);
+                error!("Error in handler: {:?}", err);
             }
             respond(())
         },

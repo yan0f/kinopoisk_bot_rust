@@ -1,6 +1,8 @@
 use reqwest;
 use serde::{Deserialize, Serialize};
 use std::env;
+use log::info;
+
 
 const API_VERSION: &str = "v2.1";
 const KINOPOISK_UNOFFICIAL_API: &str = "https://kinopoiskapiunofficial.tech/api";
@@ -68,7 +70,7 @@ impl Movie {
 
 pub async fn search_for_movie(keyword: String) -> Vec<Movie> {
     let client = reqwest::Client::new();
-
+    info!("{}", keyword.as_str());
     let api_token = env::var("KINOPOISK_API_TOKEN").expect("$KINOPOISK_API_TOKEN is not set");
     let path = format!("{KINOPOISK_UNOFFICIAL_API}/{API_VERSION}/films/search-by-keyword");
     let response = client
