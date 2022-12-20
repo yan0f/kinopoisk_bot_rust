@@ -1,3 +1,4 @@
+use dotenv::dotenv;
 use log::{error, info};
 use teloxide::{
     prelude::*,
@@ -12,6 +13,7 @@ mod handlers;
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
+    dotenv().ok();
     info!("Starting Kinopoisk bot...");
 
     let bot = Bot::from_env();
